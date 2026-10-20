@@ -224,6 +224,26 @@
     .fill.cyclebar{background:var(--accent2)}
     .fill.randombar{background:var(--blue)}
 
+
+    .simpson-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+    .simpson-panel{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:1rem}
+    .simpson-panel h3{margin:.1rem 0 .8rem;text-align:center}
+    .simpson-row{display:grid;grid-template-columns:90px 1fr 72px;align-items:center;gap:.55rem;margin:.65rem 0;font-weight:850}
+    .simpson-track{height:26px;border-radius:999px;background:color-mix(in srgb,var(--line) 55%,transparent);overflow:hidden}
+    .simpson-fill{height:100%;border-radius:999px;transition:width .5s ease}
+    .simpson-fill.a{background:var(--blue)}
+    .simpson-fill.b{background:var(--accent)}
+    .simpson-pct{text-align:right;font-variant-numeric:tabular-nums}
+    .simpson-count{text-align:center;color:var(--muted);font-size:.82rem;font-weight:750;margin-top:.35rem}
+    .simpson-total{margin-top:1rem;padding:1rem;border-radius:18px;border:2px dashed var(--line);background:color-mix(in srgb,var(--panel) 80%,var(--bg))}
+    .simpson-sliders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+    .simpson-sliderbox{border:1px solid var(--line);border-radius:18px;padding:1rem;background:var(--bg)}
+    .simpson-sliderbox label{display:block;font-weight:900;margin-bottom:.55rem}
+    .simpson-sliderbox input{width:100%}
+    .simpson-big{font-size:1.15rem;font-weight:1000;text-align:center;margin-top:.55rem}
+    .simpson-verdict{text-align:center;font-weight:1000;font-size:1.05rem;margin-top:.8rem}
+    @media(max-width:700px){.simpson-groups,.simpson-sliders{grid-template-columns:1fr}.simpson-row{grid-template-columns:76px 1fr 58px}}
+
     @media(max-width:720px){.home-grid{grid-template-columns:1fr}}
 
   </style>
@@ -274,6 +294,12 @@
           <h2>100 prigionieri</h2>
           <p>Cento persone, cento cassetti e solo cinquanta tentativi ciascuno. Una strategia cambia tutto.</p>
           <span class="tag">PROBABILITÀ</span><span class="card-arrow">→</span>
+        </button>
+        <button class="paradox-card" data-open="simpson">
+          <div class="paradox-icon">📊↕️</div>
+          <h2>Simpson</h2>
+          <p>Una tendenza vale in ogni gruppo separato… ma si ribalta quando i dati vengono messi insieme.</p>
+          <span class="tag">STATISTICA</span><span class="card-arrow">→</span>
         </button>
       </div>
       <div class="future-strip">Nuovi paradossi potranno essere aggiunti qui come moduli indipendenti.</div>
@@ -567,6 +593,78 @@
       </section>
     </section>
 
+
+    <section id="simpsonView" class="hidden">
+      <section class="hero">
+        <h1>📊 Paradosso di Simpson</h1>
+        <p>Confronta due metodi nei gruppi separati. Poi prova a prevedere cosa succederà quando uniamo tutti i dati.</p>
+      </section>
+
+      <nav class="tabs" aria-label="Modalità Simpson">
+        <button class="tab active" data-simpson-mode="discover">🔎 SCOPRI</button>
+        <button class="tab" data-simpson-mode="weights">⚖️ CAMBIA I PESI</button>
+      </nav>
+
+      <section id="simpsonDiscover" class="card">
+        <div class="family-question">Due metodi vengono usati su casi <b>facili</b> e <b>difficili</b>. Guarda prima i risultati separati.</div>
+        <div class="simpson-groups">
+          <div class="simpson-panel">
+            <h3>🙂 Casi facili</h3>
+            <div class="simpson-row"><span>Metodo A</span><div class="simpson-track"><div class="simpson-fill a" style="width:93.1%"></div></div><span class="simpson-pct">93,1%</span></div>
+            <div class="simpson-count">81 successi su 87</div>
+            <div class="simpson-row"><span>Metodo B</span><div class="simpson-track"><div class="simpson-fill b" style="width:86.7%"></div></div><span class="simpson-pct">86,7%</span></div>
+            <div class="simpson-count">234 successi su 270</div>
+          </div>
+          <div class="simpson-panel">
+            <h3>😓 Casi difficili</h3>
+            <div class="simpson-row"><span>Metodo A</span><div class="simpson-track"><div class="simpson-fill a" style="width:73%"></div></div><span class="simpson-pct">73,0%</span></div>
+            <div class="simpson-count">192 successi su 263</div>
+            <div class="simpson-row"><span>Metodo B</span><div class="simpson-track"><div class="simpson-fill b" style="width:68.8%"></div></div><span class="simpson-pct">68,8%</span></div>
+            <div class="simpson-count">55 successi su 80</div>
+          </div>
+        </div>
+
+        <div class="family-question">In entrambi i gruppi A ha una percentuale di successo maggiore. <b>Chi pensi che vinca nel totale?</b></div>
+        <div id="simpsonGuessActions" class="actions">
+          <button id="simpsonGuessA" class="primary">🔵 METODO A</button>
+          <button id="simpsonGuessB" class="secondary">🟠 METODO B</button>
+        </div>
+        <div id="simpsonTotal" class="simpson-total hidden">
+          <h3 style="text-align:center;margin-top:0">Tutti i casi insieme</h3>
+          <div class="simpson-row"><span>Metodo A</span><div class="simpson-track"><div class="simpson-fill a" style="width:78%"></div></div><span class="simpson-pct">78,0%</span></div>
+          <div class="simpson-count">273 successi su 350</div>
+          <div class="simpson-row"><span>Metodo B</span><div class="simpson-track"><div class="simpson-fill b" style="width:82.6%"></div></div><span class="simpson-pct">82,6%</span></div>
+          <div class="simpson-count">289 successi su 350</div>
+        </div>
+        <div id="simpsonResult" class="result-banner hidden"></div>
+        <div id="simpsonResetWrap" class="actions hidden"><button id="simpsonResetBtn" class="nbtn">RIPROVA</button></div>
+      </section>
+
+      <section id="simpsonWeights" class="card hidden">
+        <div class="family-question">Manteniamo fisse le percentuali nei due gruppi, ma cambiamo <b>quanto pesano casi facili e difficili</b> nei due metodi.</div>
+        <div class="simpson-sliders">
+          <div class="simpson-sliderbox">
+            <label for="simpsonWeightA">Metodo A · quota casi facili</label>
+            <input id="simpsonWeightA" type="range" min="0" max="100" value="25">
+            <div id="simpsonWeightAValue" class="simpson-big">25% facili · 75% difficili</div>
+          </div>
+          <div class="simpson-sliderbox">
+            <label for="simpsonWeightB">Metodo B · quota casi facili</label>
+            <input id="simpsonWeightB" type="range" min="0" max="100" value="77">
+            <div id="simpsonWeightBValue" class="simpson-big">77% facili · 23% difficili</div>
+          </div>
+        </div>
+        <div class="simpson-total">
+          <h3 style="text-align:center;margin-top:0">Risultato complessivo atteso</h3>
+          <div class="simpson-row"><span>Metodo A</span><div class="simpson-track"><div id="simpsonAggA" class="simpson-fill a"></div></div><span id="simpsonAggAPct" class="simpson-pct"></span></div>
+          <div class="simpson-row"><span>Metodo B</span><div class="simpson-track"><div id="simpsonAggB" class="simpson-fill b"></div></div><span id="simpsonAggBPct" class="simpson-pct"></span></div>
+          <div id="simpsonVerdict" class="simpson-verdict"></div>
+        </div>
+        <div class="compare-note">Nei casi facili A resta al 93,1% contro 86,7%; nei difficili A resta al 73,0% contro 68,8%. Cambiano soltanto le proporzioni dei due tipi di casi.</div>
+        <div class="actions"><button id="simpsonPresetBtn" class="nbtn">↺ CONFIGURAZIONE PARADOSSALE</button></div>
+      </section>
+    </section>
+
     <div class="footer">PARADOX! · esperimenti casuali: ripetendo le simulazioni i risultati possono variare leggermente.</div>
   </main>
 
@@ -611,6 +709,13 @@
         <p>Con scelte casuali, ogni prigioniero ha probabilità 1/2 di riuscire, ma la probabilità che riescano tutti è <b>(1/2)<sup>100</sup></b>, circa 7,9 × 10<sup>−31</sup>: praticamente zero.</p>
         <p>La strategia dei cicli è diversa: il prigioniero n apre prima il cassetto n. Se trova il cartellino k, apre poi il cassetto k, e continua così. In questo modo segue un ciclo della permutazione.</p>
         <p>L'intera squadra vince esattamente quando nessun ciclo della permutazione è più lungo di 50. Per 100 cassetti questa probabilità è circa <b>31,18%</b>. È enorme rispetto alla strategia casuale, pur senza alcuna comunicazione tra i prigionieri durante il gioco.</p>
+      </div>
+      <div id="infoSimpson" class="hidden">
+        <h2>Paradosso di Simpson</h2>
+        <p>Il paradosso di Simpson si verifica quando una tendenza presente in diversi gruppi separati <b>si attenua, scompare o si inverte</b> quando i gruppi vengono aggregati.</p>
+        <p>In questo esempio il Metodo A ha una percentuale di successo maggiore sia nei casi facili sia nei casi difficili. Però A viene usato soprattutto sui casi difficili, mentre B soprattutto sui casi facili. Nel totale, quindi, B può apparire migliore.</p>
+        <p>Non c'è alcuna contraddizione matematica: le percentuali complessive sono <b>medie pesate</b>. Se i pesi dei gruppi sono molto diversi, confrontare soltanto i totali può essere fuorviante.</p>
+        <p>È un promemoria importante in statistica: prima di interpretare un dato aggregato bisogna chiedersi se esistano variabili nascoste o gruppi con composizioni diverse.</p>
       </div>
       <div class="credits"><b>PARADOX!</b><br>Idea e progetto didattico: Flavio Naretti.<br>Web app realizzata con ChatGPT · 2026.</div>
       <div class="actions"><button id="closeInfoBtn" class="primary">CHIUDI</button></div>
@@ -775,6 +880,7 @@
     $('#boxesView').classList.toggle('hidden',name!=='boxes');
     $('#childrenView').classList.toggle('hidden',name!=='children');
     $('#prisonersView').classList.toggle('hidden',name!=='prisoners');
+    $('#simpsonView').classList.toggle('hidden',name!=='simpson');
     $('#homeBtn').classList.toggle('hidden',name==='home');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -1103,6 +1209,50 @@
   $('#prisonerCustomN').oninput=()=>$$('[data-prisonern]').forEach(x=>x.classList.remove('active'));
   $('#prisonerRunBtn').onclick=runPrisoners;
 
+
+  function revealSimpson(guess){
+    $('#simpsonGuessActions').classList.add('hidden');
+    $('#simpsonTotal').classList.remove('hidden');
+    $('#simpsonResetWrap').classList.remove('hidden');
+    const correct=guess==='B',rb=$('#simpsonResult');
+    rb.className='result-banner '+(correct?'win':'lose');
+    rb.textContent=(correct?'✓ Esatto! ':'✗ Sorpresa! ')+'Nel totale il Metodo B sale all\'82,6%, mentre A scende al 78,0%.';
+    tone(correct?820:260,.13,'triangle',.07);
+  }
+  function resetSimpson(){
+    $('#simpsonGuessActions').classList.remove('hidden');
+    $('#simpsonTotal').classList.add('hidden');
+    $('#simpsonResetWrap').classList.add('hidden');
+    $('#simpsonResult').className='result-banner hidden';
+    $('#simpsonResult').textContent='';
+  }
+  function updateSimpsonWeights(){
+    const wa=+$('#simpsonWeightA').value/100,wb=+$('#simpsonWeightB').value/100;
+    const a=wa*93.1+(1-wa)*73.0;
+    const b=wb*86.7+(1-wb)*68.8;
+    $('#simpsonWeightAValue').textContent=Math.round(wa*100)+'% facili · '+Math.round((1-wa)*100)+'% difficili';
+    $('#simpsonWeightBValue').textContent=Math.round(wb*100)+'% facili · '+Math.round((1-wb)*100)+'% difficili';
+    $('#simpsonAggA').style.width=a+'%';$('#simpsonAggB').style.width=b+'%';
+    $('#simpsonAggAPct').textContent=a.toFixed(1).replace('.',',')+'%';
+    $('#simpsonAggBPct').textContent=b.toFixed(1).replace('.',',')+'%';
+    const v=$('#simpsonVerdict');
+    if(Math.abs(a-b)<.05)v.textContent='≈ Pareggio complessivo';
+    else if(a>b)v.textContent='🔵 Nel totale vince A';
+    else v.textContent='🟠 Nel totale vince B: la tendenza si è ribaltata';
+  }
+  $('#simpsonGuessA').onclick=()=>revealSimpson('A');
+  $('#simpsonGuessB').onclick=()=>revealSimpson('B');
+  $('#simpsonResetBtn').onclick=resetSimpson;
+  $('#simpsonWeightA').oninput=updateSimpsonWeights;
+  $('#simpsonWeightB').oninput=updateSimpsonWeights;
+  $('#simpsonPresetBtn').onclick=()=>{$('#simpsonWeightA').value=25;$('#simpsonWeightB').value=77;updateSimpsonWeights();tone(520,.07,'triangle',.04);};
+  document.querySelectorAll('[data-simpson-mode]').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('[data-simpson-mode]').forEach(x=>x.classList.toggle('active',x===t));
+    const discover=t.dataset.simpsonMode==='discover';
+    $('#simpsonDiscover').classList.toggle('hidden',!discover);
+    $('#simpsonWeights').classList.toggle('hidden',discover);
+  });
+
   const darkStored=localStorage.getItem('mh-theme');
   if(darkStored==='dark' || (!darkStored && matchMedia('(prefers-color-scheme:dark)').matches)) document.body.classList.add('dark');
   function updateThemeIcon(){ $('#themeBtn').textContent=document.body.classList.contains('dark')?'🌙':'☀️'; }
@@ -1115,14 +1265,14 @@
     try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }catch(e){}
   };
   $('#infoBtn').onclick=()=>{
-    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');
-    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):$('#infoPrisoners')).classList.remove('hidden');
+    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');$('#infoSimpson').classList.add('hidden');
+    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):currentView==='prisoners'?$('#infoPrisoners'):$('#infoSimpson')).classList.remove('hidden');
     $('#infoModal').classList.remove('hidden');
   };
   $('#closeInfoBtn').onclick=()=>$('#infoModal').classList.add('hidden');
   $('#infoModal').onclick=e=>{if(e.target.id==='infoModal') $('#infoModal').classList.add('hidden');};
 
-  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();setView('home');
+  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();resetSimpson();updateSimpsonWeights();setView('home');
   if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 })();
 </script>
