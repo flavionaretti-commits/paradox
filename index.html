@@ -244,6 +244,24 @@
     .simpson-verdict{text-align:center;font-weight:1000;font-size:1.05rem;margin-top:.8rem}
     @media(max-width:700px){.simpson-groups,.simpson-sliders{grid-template-columns:1fr}.simpson-row{grid-template-columns:76px 1fr 58px}}
 
+
+    .stp-game{max-width:760px;margin:0 auto;text-align:center}
+    .stp-coin{width:130px;height:130px;border-radius:50%;margin:1rem auto;display:grid;place-items:center;font-size:3rem;font-weight:1000;
+      background:radial-gradient(circle at 35% 30%,#fff3a6,#e0ad29 58%,#9a6d08);color:#5b4100;border:7px solid #ffffff88;box-shadow:0 12px 26px #0003}
+    .stp-coin.tails{background:radial-gradient(circle at 35% 30%,#eef4f8,#b9c4cf 58%,#74808c);color:#39434d}
+    .stp-pot{font-size:clamp(1.7rem,6vw,3rem);font-weight:1000;margin:.45rem 0}
+    .stp-sequence{display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;min-height:42px;margin:.8rem 0}
+    .stp-toss{padding:.42rem .6rem;border-radius:999px;border:1px solid var(--line);background:var(--bg);font-weight:900}
+    .stp-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem;margin:1rem 0}
+    .stp-stat{padding:.85rem;border:1px solid var(--line);border-radius:16px;background:var(--bg);text-align:center}
+    .stp-stat span{display:block;color:var(--muted);font-size:.8rem;font-weight:800}
+    .stp-stat b{display:block;font-size:1.25rem;margin-top:.25rem}
+    .stp-dist{display:grid;gap:.55rem;margin-top:1rem}
+    .stp-dist-row{display:grid;grid-template-columns:70px 1fr 62px;gap:.55rem;align-items:center;font-weight:800}
+    .stp-dist-track{height:22px;border-radius:999px;background:color-mix(in srgb,var(--line) 50%,transparent);overflow:hidden}
+    .stp-dist-fill{height:100%;background:var(--gold);border-radius:999px}
+    @media(max-width:600px){.stp-summary{grid-template-columns:1fr}.stp-coin{width:105px;height:105px;font-size:2.5rem}}
+
     @media(max-width:720px){.home-grid{grid-template-columns:1fr}}
 
   </style>
@@ -300,6 +318,12 @@
           <h2>Simpson</h2>
           <p>Una tendenza vale in ogni gruppo separato… ma si ribalta quando i dati vengono messi insieme.</p>
           <span class="tag">STATISTICA</span><span class="card-arrow">→</span>
+        </button>
+        <button class="paradox-card" data-open="stpetersburg">
+          <div class="paradox-icon">🪙💰</div>
+          <h2>San Pietroburgo</h2>
+          <p>Una moneta può promettere premi enormi. Ma quanto pagheresti davvero per giocare?</p>
+          <span class="tag">VALORE ATTESO</span><span class="card-arrow">→</span>
         </button>
       </div>
       <div class="future-strip">Nuovi paradossi potranno essere aggiunti qui come moduli indipendenti.</div>
@@ -665,6 +689,65 @@
       </section>
     </section>
 
+
+    <section id="stpetersburgView" class="hidden">
+      <section class="hero">
+        <h1>🪙 San Pietroburgo</h1>
+        <p>Lancia una moneta finché compare testa. Più tardi arriva, più grande diventa il premio.</p>
+      </section>
+
+      <nav class="tabs" aria-label="Modalità San Pietroburgo">
+        <button class="tab active" data-stp-mode="play">🪙 PARTITA</button>
+        <button class="tab" data-stp-mode="sim">⚡ SIMULAZIONE</button>
+      </nav>
+
+      <section id="stpPlay" class="card">
+        <div class="stp-game">
+          <div class="family-question">Se <b>TESTA</b> esce al 1° lancio vinci 2 €, al 2° vinci 4 €, al 3° 8 €, poi 16 €, 32 €…</div>
+          <div id="stpCoin" class="stp-coin">?</div>
+          <div class="tiny">Premio se esce testa al prossimo lancio</div>
+          <div id="stpPot" class="stp-pot">2 €</div>
+          <div id="stpSequence" class="stp-sequence"></div>
+          <div id="stpPlayActions" class="actions">
+            <button id="stpTossBtn" class="primary">🪙 LANCIA LA MONETA</button>
+          </div>
+          <div id="stpNextActions" class="actions hidden">
+            <button id="stpNextBtn" class="primary">NUOVA PARTITA</button>
+          </div>
+          <div id="stpResult" class="result-banner hidden"></div>
+        </div>
+      </section>
+
+      <section id="stpSim" class="card hidden">
+        <div class="sim-grid">
+          <div>
+            <h3 class="section-title">Quante partite simulare?</h3>
+            <div class="numbers">
+              <button class="nbtn" data-stpn="100">100</button>
+              <button class="nbtn active" data-stpn="1000">1.000</button>
+              <button class="nbtn" data-stpn="10000">10.000</button>
+              <input id="stpCustomN" class="custom" type="number" min="1" max="100000" placeholder="Personalizzato">
+            </div>
+          </div>
+          <div>
+            <h3 class="section-title">Osserva soprattutto</h3>
+            <p class="tiny">Media, mediana e premio massimo: non raccontano affatto la stessa storia.</p>
+          </div>
+        </div>
+        <button id="stpRunBtn" class="primary run">▶ AVVIA SIMULAZIONE</button>
+        <div id="stpSimResults" class="sim-results hidden">
+          <div id="stpHeadline" class="bigline"></div>
+          <div class="stp-summary">
+            <div class="stp-stat"><span>MEDIA</span><b id="stpMean">—</b></div>
+            <div class="stp-stat"><span>MEDIANA</span><b id="stpMedian">—</b></div>
+            <div class="stp-stat"><span>PREMIO MASSIMO</span><b id="stpMax">—</b></div>
+          </div>
+          <div id="stpDistribution" class="stp-dist"></div>
+          <div class="compare-note">Ripeti la simulazione più volte: i premi rari e molto grandi possono cambiare parecchio la media.</div>
+        </div>
+      </section>
+    </section>
+
     <div class="footer">PARADOX! · esperimenti casuali: ripetendo le simulazioni i risultati possono variare leggermente.</div>
   </main>
 
@@ -717,6 +800,13 @@
         <p>Non c'è alcuna contraddizione matematica: le percentuali complessive sono <b>medie pesate</b>. Se i pesi dei gruppi sono molto diversi, confrontare soltanto i totali può essere fuorviante.</p>
         <p>È un promemoria importante in statistica: prima di interpretare un dato aggregato bisogna chiedersi se esistano variabili nascoste o gruppi con composizioni diverse.</p>
       </div>
+      <div id="infoStpetersburg" class="hidden">
+        <h2>Paradosso di San Pietroburgo</h2>
+        <p>Si lancia una moneta finché esce testa. Se testa compare al lancio n, il premio è <b>2<sup>n</sup> euro</b>: 2 €, 4 €, 8 €, 16 € e così via.</p>
+        <p>La probabilità di arrivare esattamente al lancio n è 1/2<sup>n</sup>. Il contributo di ogni possibile livello al valore atteso è quindi 2<sup>n</sup> × 1/2<sup>n</sup> = <b>1 €</b>. Sommando infiniti livelli, il valore atteso teorico diverge: non ha un valore finito.</p>
+        <p>Eppure quasi nessuno sarebbe disposto a pagare una cifra enorme per partecipare una sola volta. La maggior parte delle partite termina presto con premi piccoli; i premi giganteschi sono possibili, ma estremamente rari.</p>
+        <p>Il paradosso ha avuto un ruolo importante nello sviluppo delle idee di <b>utilità</b> e di avversione al rischio: il valore monetario atteso, da solo, non descrive necessariamente quanto una lotteria sia desiderabile per una persona.</p>
+      </div>
       <div class="credits"><b>PARADOX!</b><br>Idea e progetto didattico: Flavio Naretti.<br>Web app realizzata con ChatGPT · 2026.</div>
       <div class="actions"><button id="closeInfoBtn" class="primary">CHIUDI</button></div>
     </div>
@@ -731,6 +821,7 @@
   const boxState = { n:1000, boxes:[], chosen:null, shown:null, other:null, phase:'choose', useful:0, otherGold:0 };
   const childState = { n:1000, rounds:0, both:0, phase:'guess', family:null };
   const prisonerState = { n:1000, perm:[], prisoner:1 };
+  const stpState = { n:1000, tosses:0, done:false };
   const state = {
     prize: 0, first: null, opened: null, final: null, phase: 'pick',
     sound: localStorage.getItem('mh-sound') !== 'off',
@@ -881,6 +972,7 @@
     $('#childrenView').classList.toggle('hidden',name!=='children');
     $('#prisonersView').classList.toggle('hidden',name!=='prisoners');
     $('#simpsonView').classList.toggle('hidden',name!=='simpson');
+    $('#stpetersburgView').classList.toggle('hidden',name!=='stpetersburg');
     $('#homeBtn').classList.toggle('hidden',name==='home');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -1253,6 +1345,87 @@
     $('#simpsonWeights').classList.toggle('hidden',discover);
   });
 
+
+  function formatEuro(v){
+    if(v>=1e12)return v.toExponential(2).replace('.',',')+' €';
+    return Math.round(v).toLocaleString('it-IT')+' €';
+  }
+  function resetStpGame(){
+    stpState.tosses=0;stpState.done=false;
+    $('#stpCoin').className='stp-coin';$('#stpCoin').textContent='?';
+    $('#stpPot').textContent='2 €';$('#stpSequence').innerHTML='';
+    $('#stpPlayActions').classList.remove('hidden');$('#stpNextActions').classList.add('hidden');
+    $('#stpResult').className='result-banner hidden';$('#stpResult').textContent='';
+  }
+  function tossStp(){
+    if(stpState.done)return;
+    stpState.tosses++;
+    const heads=Math.random()<.5;
+    const coin=$('#stpCoin');
+    coin.className='stp-coin '+(heads?'':'tails');
+    coin.textContent=heads?'T':'C';
+    const chip=document.createElement('span');
+    chip.className='stp-toss';chip.textContent=stpState.tosses+'°: '+(heads?'TESTA':'CROCE');
+    $('#stpSequence').appendChild(chip);
+    if(heads){
+      stpState.done=true;
+      const prize=Math.pow(2,stpState.tosses);
+      $('#stpPot').textContent=formatEuro(prize);
+      $('#stpPlayActions').classList.add('hidden');$('#stpNextActions').classList.remove('hidden');
+      const rb=$('#stpResult');rb.className='result-banner win';
+      rb.textContent='🏆 Partita terminata al '+stpState.tosses+'° lancio: vinci '+formatEuro(prize)+'.';
+      tone(880,.15,'triangle',.07);
+    }else{
+      const nextPrize=Math.pow(2,stpState.tosses+1);
+      $('#stpPot').textContent=formatEuro(nextPrize);
+      tone(260,.08,'triangle',.04);
+    }
+  }
+  function oneStpPrize(){
+    let n=1;
+    while(Math.random()>=.5 && n<1023)n++;
+    return Math.pow(2,n);
+  }
+  function runStp(){
+    let n=stpState.n,custom=parseInt($('#stpCustomN').value,10);
+    if(Number.isFinite(custom)&&custom>0)n=Math.min(custom,100000);
+    const vals=new Array(n);
+    let sum=0,max=0;
+    const buckets=[0,0,0,0,0,0,0,0,0];
+    for(let i=0;i<n;i++){
+      const v=oneStpPrize();vals[i]=v;sum+=v;if(v>max)max=v;
+      const power=Math.log2(v);
+      const bi=power<=1?0:power===2?1:power===3?2:power===4?3:power===5?4:power===6?5:power===7?6:power===8?7:8;
+      buckets[bi]++;
+    }
+    vals.sort((a,b)=>a-b);
+    const median=n%2?vals[(n-1)/2]:(vals[n/2-1]+vals[n/2])/2;
+    $('#stpSimResults').classList.remove('hidden');
+    $('#stpHeadline').textContent=n.toLocaleString('it-IT')+' partite simulate';
+    $('#stpMean').textContent=formatEuro(sum/n);
+    $('#stpMedian').textContent=formatEuro(median);
+    $('#stpMax').textContent=formatEuro(max);
+    const labels=['2 €','4 €','8 €','16 €','32 €','64 €','128 €','256 €','512 €+'];
+    $('#stpDistribution').innerHTML=buckets.map((count,i)=>{
+      const p=100*count/n;
+      return '<div class="stp-dist-row"><span>'+labels[i]+'</span><div class="stp-dist-track"><div class="stp-dist-fill" style="width:'+p+'%"></div></div><span>'+p.toFixed(1).replace('.',',')+'%</span></div>';
+    }).join('');
+    tone(700,.09,'triangle',.05);
+  }
+  $('#stpTossBtn').onclick=tossStp;
+  $('#stpNextBtn').onclick=resetStpGame;
+  document.querySelectorAll('[data-stp-mode]').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('[data-stp-mode]').forEach(x=>x.classList.toggle('active',x===t));
+    const play=t.dataset.stpMode==='play';
+    $('#stpPlay').classList.toggle('hidden',!play);$('#stpSim').classList.toggle('hidden',play);
+  });
+  document.querySelectorAll('[data-stpn]').forEach(x=>x.onclick=()=>{
+    stpState.n=+x.dataset.stpn;$('#stpCustomN').value='';
+    document.querySelectorAll('[data-stpn]').forEach(y=>y.classList.toggle('active',y===x));
+  });
+  $('#stpCustomN').oninput=()=>document.querySelectorAll('[data-stpn]').forEach(x=>x.classList.remove('active'));
+  $('#stpRunBtn').onclick=runStp;
+
   const darkStored=localStorage.getItem('mh-theme');
   if(darkStored==='dark' || (!darkStored && matchMedia('(prefers-color-scheme:dark)').matches)) document.body.classList.add('dark');
   function updateThemeIcon(){ $('#themeBtn').textContent=document.body.classList.contains('dark')?'🌙':'☀️'; }
@@ -1265,14 +1438,14 @@
     try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }catch(e){}
   };
   $('#infoBtn').onclick=()=>{
-    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');$('#infoSimpson').classList.add('hidden');
-    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):currentView==='prisoners'?$('#infoPrisoners'):$('#infoSimpson')).classList.remove('hidden');
+    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');$('#infoSimpson').classList.add('hidden');$('#infoStpetersburg').classList.add('hidden');
+    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):currentView==='prisoners'?$('#infoPrisoners'):currentView==='simpson'?$('#infoSimpson'):$('#infoStpetersburg')).classList.remove('hidden');
     $('#infoModal').classList.remove('hidden');
   };
   $('#closeInfoBtn').onclick=()=>$('#infoModal').classList.add('hidden');
   $('#infoModal').onclick=e=>{if(e.target.id==='infoModal') $('#infoModal').classList.add('hidden');};
 
-  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();resetSimpson();updateSimpsonWeights();setView('home');
+  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();resetSimpson();updateSimpsonWeights();resetStpGame();setView('home');
   if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 })();
 </script>
