@@ -161,7 +161,7 @@
     }
 
     /* PARADOX! contenitore */
-    .home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;max-width:920px;margin:0 auto}
+    .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;max-width:1020px;margin:0 auto}
     .paradox-card{position:relative;overflow:hidden;text-align:left;border:1px solid var(--line);border-radius:25px;background:var(--panel);color:var(--ink);padding:1.25rem;min-height:225px;cursor:pointer;box-shadow:var(--shadow);transition:.18s transform}
     .paradox-card:active{transform:scale(.985)}
     .paradox-icon{font-size:4rem;line-height:1;margin-bottom:1rem}
@@ -180,6 +180,24 @@
     .person.match{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,var(--panel));box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent)}
     .birthday-summary{text-align:center;color:var(--muted);font-weight:750}
     .fill.bday{background:var(--accent)}
+
+    .box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.6rem,3vw,1.4rem);max-width:780px;margin:1rem auto}
+    .box-choice{border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--ink);padding:1rem;cursor:pointer;min-height:190px;display:grid;place-items:center;position:relative;overflow:hidden}
+    .box-choice:active{transform:scale(.98)}
+    .box-choice.selected{outline:4px solid var(--gold);outline-offset:-4px}
+    .box-art{width:min(150px,80%);aspect-ratio:1.25;position:relative;background:linear-gradient(145deg,#b46a36,#70401f);border-radius:10px 10px 18px 18px;box-shadow:inset 0 0 0 5px #5b321b,0 12px 20px #0002}
+    .box-art::before{content:"";position:absolute;left:-5%;right:-5%;top:-14%;height:28%;background:linear-gradient(#ce824b,#8e4c28);border:5px solid #5b321b;border-radius:10px;box-shadow:0 5px 8px #0002}
+    .box-number{font-weight:1000;color:var(--muted);margin-top:.45rem}
+    .coin-show{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+    .coin{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-weight:1000;font-size:1.45rem;border:5px solid #ffffff88;box-shadow:0 7px 18px #0004}
+    .coin.gold{background:radial-gradient(circle at 35% 30%,#fff3a6,#e0ad29 58%,#9a6d08);color:#5b4100}
+    .coin.silver{background:radial-gradient(circle at 35% 30%,#fff,#c8d0d8 58%,#7b8794);color:#3d4650}
+    .box-reveal{display:flex;justify-content:center;gap:.7rem;margin:.7rem 0;min-height:78px;align-items:center}
+    .box-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-top:1rem}
+    .fill.goldbar{background:var(--gold)}
+    .fill.silverbar{background:#9aa6b2}
+    @media(max-width:600px){.box-grid{gap:.45rem}.box-choice{min-height:150px;padding:.55rem}.box-art{width:min(105px,85%)}.coin{width:58px;height:58px;font-size:1.15rem}.box-stats{grid-template-columns:1fr}}
+
     @media(max-width:720px){.home-grid{grid-template-columns:1fr}}
 
   </style>
@@ -211,6 +229,12 @@
           <div class="paradox-icon">🎂🎈</div>
           <h2>Compleanno</h2>
           <p>Quante persone servono perché una coincidenza di compleanno smetta di sembrarti improbabile?</p>
+          <span class="tag">PROBABILITÀ</span><span class="card-arrow">→</span>
+        </button>
+        <button class="paradox-card" data-open="boxes">
+          <div class="paradox-icon">🎁🪙</div>
+          <h2>Tre scatole</h2>
+          <p>Vedi una moneta d'oro. Cosa puoi davvero dedurre sulla moneta nascosta nella stessa scatola?</p>
           <span class="tag">PROBABILITÀ</span><span class="card-arrow">→</span>
         </button>
       </div>
@@ -334,6 +358,64 @@
       </section>
     </section>
 
+
+    <section id="boxesView" class="hidden">
+      <section class="hero">
+        <h1>🎁 Tre scatole</h1>
+        <p>Ogni scatola contiene due monete. Scegline una e osserva la prima moneta estratta.</p>
+      </section>
+
+      <nav class="tabs" aria-label="Modalità tre scatole">
+        <button class="tab active" data-box-mode="free">🎁 ESPERIMENTO</button>
+        <button class="tab" data-box-mode="sim">⚡ SIMULAZIONE</button>
+      </nav>
+
+      <section id="boxFree" class="card">
+        <div class="game-head">
+          <p id="boxInstruction" class="instruction">Scegli una delle tre scatole.</p>
+          <button id="boxResetBtn" class="nbtn">Nuovo giro</button>
+        </div>
+        <div id="boxGrid" class="box-grid"></div>
+        <div id="boxGuessActions" class="actions hidden">
+          <button id="guessGoldBtn" class="primary">🟡 L'ALTRA È ORO</button>
+          <button id="guessSilverBtn" class="secondary">⚪ L'ALTRA È ARGENTO</button>
+        </div>
+        <div id="boxNextActions" class="actions hidden">
+          <button id="boxNextBtn" class="primary">NUOVA ESTRAZIONE</button>
+        </div>
+        <div id="boxResult" class="result-banner hidden"></div>
+        <div id="boxReveal" class="box-reveal"></div>
+        <div class="box-stats">
+          <div class="statbox">Casi utili osservati<b id="boxUsefulStats">0</b></div>
+          <div class="statbox">Seconda moneta d'oro<b id="boxGoldStats">0 / 0 · —</b></div>
+        </div>
+      </section>
+
+      <section id="boxSim" class="card hidden">
+        <div class="sim-grid">
+          <div>
+            <h3 class="section-title">Quante estrazioni totali?</h3>
+            <div class="numbers">
+              <button class="nbtn" data-boxn="100">100</button>
+              <button class="nbtn active" data-boxn="1000">1.000</button>
+              <button class="nbtn" data-boxn="10000">10.000</button>
+              <input id="boxCustomN" class="custom" type="number" min="1" max="100000" placeholder="Personalizzato">
+            </div>
+          </div>
+          <div>
+            <h3 class="section-title">Cosa viene contato?</h3>
+            <p class="tiny">Solo le estrazioni in cui la prima moneta mostrata è d'oro.</p>
+          </div>
+        </div>
+        <button id="boxRunBtn" class="primary run">▶ AVVIA SIMULAZIONE</button>
+        <div id="boxSimResults" class="sim-results hidden">
+          <div id="boxHeadline" class="bigline"></div>
+          <div id="boxBars" class="bars"></div>
+          <div id="boxTheory" class="compare-note"></div>
+        </div>
+      </section>
+    </section>
+
     <div class="footer">PARADOX! · esperimenti casuali: ripetendo le simulazioni i risultati possono variare leggermente.</div>
   </main>
 
@@ -359,6 +441,12 @@
         <p>Si calcola più facilmente la probabilità opposta, cioè che tutti abbiano compleanni diversi: 365/365 × 364/365 × 363/365 × …; poi si sottrae il risultato da 1. Qui trascuriamo il 29 febbraio e supponiamo i 365 giorni equiprobabili.</p>
         <p>Con 23 persone la probabilità supera già il 50%: nel gruppo esistono 253 coppie possibili.</p>
       </div>
+      <div id="infoBoxes" class="hidden">
+        <h2>Paradosso delle tre scatole</h2>
+        <p>Le tre scatole contengono rispettivamente <b>oro–oro</b>, <b>argento–argento</b> e <b>oro–argento</b>. La scatola viene scelta senza sapere cosa contiene e una delle sue due monete viene mostrata a caso.</p>
+        <p>Se la moneta mostrata è d'oro, potrebbe sembrare naturale pensare che l'altra sia oro o argento con la stessa probabilità. Ma tra tutte le possibili monete d'oro osservabili ce ne sono <b>tre</b>: due appartengono alla scatola oro–oro e una alla scatola oro–argento.</p>
+        <p>Quindi, sapendo che la prima moneta osservata è d'oro, la probabilità che anche l'altra sia d'oro è <b>2/3</b>; che sia d'argento è <b>1/3</b>.</p>
+      </div>
       <div class="credits"><b>PARADOX!</b><br>Idea e progetto didattico: Flavio Naretti.<br>Web app realizzata con ChatGPT · 2026.</div>
       <div class="actions"><button id="closeInfoBtn" class="primary">CHIUDI</button></div>
     </div>
@@ -370,6 +458,7 @@
   const $$ = s => [...document.querySelectorAll(s)];
   let currentView = 'home';
   const bdayState = { n: 1000 };
+  const boxState = { n:1000, boxes:[], chosen:null, shown:null, other:null, phase:'choose', useful:0, otherGold:0 };
   const state = {
     prize: 0, first: null, opened: null, final: null, phase: 'pick',
     sound: localStorage.getItem('mh-sound') !== 'off',
@@ -516,6 +605,7 @@
     $('#homeView').classList.toggle('hidden',name!=='home');
     $('#montyView').classList.toggle('hidden',name!=='monty');
     $('#birthdayView').classList.toggle('hidden',name!=='birthday');
+    $('#boxesView').classList.toggle('hidden',name!=='boxes');
     $('#homeBtn').classList.toggle('hidden',name==='home');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -586,6 +676,107 @@
   $('#bdayCustomN').oninput=()=>$$('[data-bn]').forEach(x=>x.classList.remove('active'));
   $('#bdayRunBtn').onclick=runBirthday;
 
+
+  function shuffleBoxContents(){
+    const sets=[['G','G'],['S','S'],['G','S']];
+    for(let i=sets.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sets[i],sets[j]]=[sets[j],sets[i]];}
+    return sets;
+  }
+  function coinHtml(kind,label){
+    return '<div class="coin '+(kind==='G'?'gold':'silver')+'">'+(label||kind)+'</div>';
+  }
+  function renderBoxes(){
+    const grid=$('#boxGrid');grid.innerHTML='';
+    for(let i=0;i<3;i++){
+      const btn=document.createElement('button');
+      btn.className='box-choice';
+      btn.dataset.box=i;
+      btn.innerHTML='<div><div class="box-art"></div><div class="box-number">SCATOLA '+(i+1)+'</div></div><div class="coin-show" data-boxcoin="'+i+'"></div>';
+      grid.appendChild(btn);
+    }
+    $('.box-choice').forEach(btn=>btn.onclick=()=>chooseBox(+btn.dataset.box));
+  }
+  function newBoxRound(){
+    boxState.boxes=shuffleBoxContents();boxState.chosen=null;boxState.shown=null;boxState.other=null;boxState.phase='choose';
+    renderBoxes();
+    $('#boxInstruction').textContent='Scegli una delle tre scatole.';
+    $('#boxGuessActions').classList.add('hidden');$('#boxNextActions').classList.add('hidden');
+    $('#boxResult').className='result-banner hidden';$('#boxResult').textContent='';
+    $('#boxReveal').innerHTML='';
+  }
+  function chooseBox(i){
+    if(boxState.phase!=='choose')return;
+    boxState.chosen=i;
+    const pair=boxState.boxes[i],shownIndex=Math.random()<.5?0:1;
+    boxState.shown=pair[shownIndex];boxState.other=pair[1-shownIndex];
+    $('.box-choice')[i].classList.add('selected');
+    $('[data-boxcoin="'+i+'"]').innerHTML=coinHtml(boxState.shown,boxState.shown==='G'?'ORO':'ARG.');
+    tone(boxState.shown==='G'?720:420,.1,'triangle',.05);
+    if(boxState.shown==='S'){
+      boxState.phase='done';
+      $('#boxInstruction').textContent='È uscita una moneta d\'argento.';
+      const rb=$('#boxResult');rb.className='result-banner neutral';rb.textContent='Questo giro non entra nella domanda classica: ci interessano i casi in cui la prima moneta osservata è d\'oro.';
+      $('#boxNextActions').classList.remove('hidden');
+    }else{
+      boxState.phase='guess';boxState.useful++;
+      $('#boxInstruction').textContent='La prima moneta è ORO. Di che colore pensi sia l\'altra?';
+      $('#boxGuessActions').classList.remove('hidden');
+      updateBoxStats();
+    }
+  }
+  function finishBoxGuess(guess){
+    if(boxState.phase!=='guess')return;
+    boxState.phase='done';
+    if(boxState.other==='G')boxState.otherGold++;
+    updateBoxStats();
+    $('#boxGuessActions').classList.add('hidden');$('#boxNextActions').classList.remove('hidden');
+    $('#boxReveal').innerHTML=coinHtml(boxState.shown,'ORO')+coinHtml(boxState.other,boxState.other==='G'?'ORO':'ARG.');
+    const correct=guess===boxState.other,rb=$('#boxResult');
+    rb.className='result-banner '+(correct?'win':'lose');
+    rb.textContent=(correct?'✓ Hai indovinato. ':'✗ Questa volta no. ')+(boxState.other==='G'?'La scatola conteneva ORO–ORO.':'La scatola conteneva ORO–ARGENTO.');
+    tone(correct?820:180,.13,'triangle',.07);
+  }
+  function updateBoxStats(){
+    $('#boxUsefulStats').textContent=boxState.useful;
+    $('#boxGoldStats').textContent=boxState.useful?boxState.otherGold+' / '+boxState.useful+' · '+(100*boxState.otherGold/boxState.useful).toFixed(1).replace('.',',')+'%':'0 / 0 · —';
+  }
+  function simulateBoxes(n){
+    let useful=0,goldOther=0;
+    for(let k=0;k<n;k++){
+      const type=Math.floor(Math.random()*3);
+      const pair=type===0?['G','G']:type===1?['S','S']:['G','S'];
+      const idx=Math.random()<.5?0:1;
+      if(pair[idx]==='G'){useful++;if(pair[1-idx]==='G')goldOther++;}
+    }
+    return {useful,goldOther};
+  }
+  function runBoxes(){
+    let n=boxState.n,custom=parseInt($('#boxCustomN').value,10);
+    if(Number.isFinite(custom)&&custom>0)n=Math.min(custom,100000);
+    const r=simulateBoxes(n);
+    const pg=r.useful?100*r.goldOther/r.useful:0,ps=100-pg;
+    $('#boxSimResults').classList.remove('hidden');
+    $('#boxHeadline').textContent=n.toLocaleString('it-IT')+' estrazioni · '+r.useful.toLocaleString('it-IT')+' con prima moneta d\'oro';
+    $('#boxBars').innerHTML=bar('🟡 Altra oro',pg,'goldbar',66.667)+bar('⚪ Altra argento',ps,'silverbar',33.333);
+    $('#boxTheory').textContent='Le tacche indicano i valori teorici nei soli casi in cui la prima moneta osservata è d\'oro.';
+    tone(700,.09,'triangle',.05);
+  }
+  $('#guessGoldBtn').onclick=()=>finishBoxGuess('G');
+  $('#guessSilverBtn').onclick=()=>finishBoxGuess('S');
+  $('#boxNextBtn').onclick=newBoxRound;
+  $('#boxResetBtn').onclick=newBoxRound;
+  $('[data-box-mode]').forEach(t=>t.onclick=()=>{
+    $('[data-box-mode]').forEach(x=>x.classList.toggle('active',x===t));
+    const free=t.dataset.boxMode==='free';
+    $('#boxFree').classList.toggle('hidden',!free);$('#boxSim').classList.toggle('hidden',free);
+  });
+  $('[data-boxn]').forEach(x=>x.onclick=()=>{
+    boxState.n=+x.dataset.boxn;$('#boxCustomN').value='';
+    $('[data-boxn]').forEach(y=>y.classList.toggle('active',y===x));
+  });
+  $('#boxCustomN').oninput=()=>$('[data-boxn]').forEach(x=>x.classList.remove('active'));
+  $('#boxRunBtn').onclick=runBoxes;
+
   const darkStored=localStorage.getItem('mh-theme');
   if(darkStored==='dark' || (!darkStored && matchMedia('(prefers-color-scheme:dark)').matches)) document.body.classList.add('dark');
   function updateThemeIcon(){ $('#themeBtn').textContent=document.body.classList.contains('dark')?'🌙':'☀️'; }
@@ -598,14 +789,14 @@
     try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }catch(e){}
   };
   $('#infoBtn').onclick=()=>{
-    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');
-    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):$('#infoBirthday')).classList.remove('hidden');
+    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');
+    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):$('#infoBoxes')).classList.remove('hidden');
     $('#infoModal').classList.remove('hidden');
   };
   $('#closeInfoBtn').onclick=()=>$('#infoModal').classList.add('hidden');
   $('#infoModal').onclick=e=>{if(e.target.id==='infoModal') $('#infoModal').classList.add('hidden');};
 
-  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();setView('home');
+  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();setView('home');
   if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 })();
 </script>
