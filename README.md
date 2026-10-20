@@ -28,6 +28,13 @@ PWA didattica per esplorare paradossi e problemi controintuitivi attraverso espe
 - Confronto tra due maschi e famiglia mista con valori teorici 1/3 e 2/3.
 - Nota didattica sul fatto che il risultato dipende da come si ottiene l'informazione.
 
+### Problema dei 100 prigionieri
+- 100 cassetti con i numeri da 1 a 100 disposti casualmente.
+- Dimostrazione interattiva della strategia dei cicli su un singolo prigioniero.
+- Verifica dell'esito dell'intera squadra sulla disposizione corrente.
+- Simulazione massiva e confronto tra strategia casuale e strategia dei cicli.
+- Probabilità teorica di successo della strategia dei cicli circa 31,18%.
+
 ## Funzioni comuni
 - Home a moduli espandibile.
 - Modalità giorno/notte.
