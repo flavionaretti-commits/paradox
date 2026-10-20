@@ -35,6 +35,12 @@ PWA didattica per esplorare paradossi e problemi controintuitivi attraverso espe
 - Simulazione massiva e confronto tra strategia casuale e strategia dei cicli.
 - Probabilità teorica di successo della strategia dei cicli circa 31,18%.
 
+### Paradosso di Simpson
+- Confronto tra due metodi in casi facili e difficili.
+- Rivelazione del ribaltamento quando i dati vengono aggregati.
+- Modalità interattiva per modificare i pesi dei gruppi.
+- Visualizzazione delle medie pesate e del momento in cui il paradosso compare o scompare.
+
 ## Funzioni comuni
 - Home a moduli espandibile.
 - Modalità giorno/notte.
