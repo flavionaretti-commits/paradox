@@ -212,6 +212,18 @@
     .fill.mixedbar{background:var(--accent2)}
     @media(max-width:430px){.child-card{min-height:145px;padding:.7rem}.child-emoji{font-size:3.3rem}}
 
+
+    .prisoner-controls{display:flex;align-items:center;justify-content:center;gap:.8rem;flex-wrap:wrap;margin:.8rem 0}
+    .prisoner-controls label{font-weight:900}
+    .prisoner-path{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:.5rem;margin:1rem 0}
+    .path-step{border:1px solid var(--line);border-radius:13px;background:var(--bg);padding:.6rem;text-align:center}
+    .path-step b{display:block;font-size:1rem}.path-step small{color:var(--muted);font-weight:750}
+    .path-step.success{border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel))}
+    .path-step.fail{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 9%,var(--panel))}
+    .prisoner-status{max-width:760px;margin:.7rem auto;text-align:center;color:var(--muted);font-weight:750}
+    .fill.cyclebar{background:var(--accent2)}
+    .fill.randombar{background:var(--blue)}
+
     @media(max-width:720px){.home-grid{grid-template-columns:1fr}}
 
   </style>
@@ -255,6 +267,12 @@
           <div class="paradox-icon">👦👧</div>
           <h2>Due figli</h2>
           <p>Una famiglia ha due figli e sai che almeno uno è maschio. Cosa puoi dedurre sull'altro?</p>
+          <span class="tag">PROBABILITÀ</span><span class="card-arrow">→</span>
+        </button>
+        <button class="paradox-card" data-open="prisoners">
+          <div class="paradox-icon">🔐📦</div>
+          <h2>100 prigionieri</h2>
+          <p>Cento persone, cento cassetti e solo cinquanta tentativi ciascuno. Una strategia cambia tutto.</p>
           <span class="tag">PROBABILITÀ</span><span class="card-arrow">→</span>
         </button>
       </div>
@@ -495,6 +513,60 @@
       </section>
     </section>
 
+
+    <section id="prisonersView" class="hidden">
+      <section class="hero">
+        <h1>🔐 100 prigionieri</h1>
+        <p>100 cassetti contengono i numeri da 1 a 100 in ordine casuale. Ogni prigioniero può aprirne al massimo 50.</p>
+      </section>
+
+      <nav class="tabs" aria-label="Modalità 100 prigionieri">
+        <button class="tab active" data-prisoner-mode="free">🔎 UN PRIGIONIERO</button>
+        <button class="tab" data-prisoner-mode="sim">⚡ SIMULAZIONE</button>
+      </nav>
+
+      <section id="prisonerFree" class="card">
+        <div class="family-question">Il prigioniero deve trovare il cartellino con il <b>proprio numero</b> aprendo al massimo 50 cassetti.</div>
+        <div class="prisoner-controls">
+          <label for="prisonerRange">Prigioniero</label>
+          <input id="prisonerRange" type="range" min="1" max="100" value="1">
+          <span id="prisonerValue" class="range-value">n. 1</span>
+        </div>
+        <div class="actions">
+          <button id="newPrisonerLayoutBtn" class="nbtn">🔀 NUOVA DISPOSIZIONE</button>
+          <button id="followCycleBtn" class="primary">🔗 SEGUI LA STRATEGIA</button>
+          <button id="checkTeamBtn" class="secondary">👥 VERIFICA LA SQUADRA</button>
+        </div>
+        <div id="prisonerResult" class="result-banner hidden"></div>
+        <div id="prisonerPath" class="prisoner-path"></div>
+        <div id="prisonerStatus" class="prisoner-status">I cartellini sono stati mescolati nei 100 cassetti.</div>
+      </section>
+
+      <section id="prisonerSim" class="card hidden">
+        <div class="sim-grid">
+          <div>
+            <h3 class="section-title">Quante partite simulare?</h3>
+            <div class="numbers">
+              <button class="nbtn" data-prisonern="100">100</button>
+              <button class="nbtn active" data-prisonern="1000">1.000</button>
+              <button class="nbtn" data-prisonern="10000">10.000</button>
+              <input id="prisonerCustomN" class="custom" type="number" min="1" max="50000" placeholder="Personalizzato">
+            </div>
+          </div>
+          <div>
+            <h3 class="section-title">Confronto</h3>
+            <p class="tiny">Tutti e 100 devono trovare il proprio numero. Basta un solo fallimento perché perda l'intera squadra.</p>
+          </div>
+        </div>
+        <button id="prisonerRunBtn" class="primary run">▶ AVVIA SIMULAZIONE</button>
+        <div id="prisonerSimResults" class="sim-results hidden">
+          <div id="prisonerHeadline" class="bigline"></div>
+          <div id="prisonerBars" class="bars"></div>
+          <div id="prisonerTheory" class="compare-note"></div>
+        </div>
+      </section>
+    </section>
+
     <div class="footer">PARADOX! · esperimenti casuali: ripetendo le simulazioni i risultati possono variare leggermente.</div>
   </main>
 
@@ -533,6 +605,13 @@
         <p>Perciò, in questo modello, la probabilità che entrambi siano maschi è <b>1/3</b>; la probabilità che la famiglia sia mista è <b>2/3</b>.</p>
         <p><b>Attenzione:</b> il risultato dipende da come viene ottenuta l'informazione “almeno uno è maschio”. Se il metodo con cui l'informazione viene comunicata cambia, può cambiare anche la probabilità condizionata.</p>
       </div>
+      <div id="infoPrisoners" class="hidden">
+        <h2>Problema dei 100 prigionieri</h2>
+        <p>Ci sono 100 prigionieri e 100 cassetti numerati. Nei cassetti vengono inseriti, in ordine casuale, i cartellini con i numeri da 1 a 100. Ogni prigioniero può aprire al massimo 50 cassetti e deve trovare il proprio numero. Tutti sopravvivono solo se riescono tutti.</p>
+        <p>Con scelte casuali, ogni prigioniero ha probabilità 1/2 di riuscire, ma la probabilità che riescano tutti è <b>(1/2)<sup>100</sup></b>, circa 7,9 × 10<sup>−31</sup>: praticamente zero.</p>
+        <p>La strategia dei cicli è diversa: il prigioniero n apre prima il cassetto n. Se trova il cartellino k, apre poi il cassetto k, e continua così. In questo modo segue un ciclo della permutazione.</p>
+        <p>L'intera squadra vince esattamente quando nessun ciclo della permutazione è più lungo di 50. Per 100 cassetti questa probabilità è circa <b>31,18%</b>. È enorme rispetto alla strategia casuale, pur senza alcuna comunicazione tra i prigionieri durante il gioco.</p>
+      </div>
       <div class="credits"><b>PARADOX!</b><br>Idea e progetto didattico: Flavio Naretti.<br>Web app realizzata con ChatGPT · 2026.</div>
       <div class="actions"><button id="closeInfoBtn" class="primary">CHIUDI</button></div>
     </div>
@@ -546,6 +625,7 @@
   const bdayState = { n: 1000 };
   const boxState = { n:1000, boxes:[], chosen:null, shown:null, other:null, phase:'choose', useful:0, otherGold:0 };
   const childState = { n:1000, rounds:0, both:0, phase:'guess', family:null };
+  const prisonerState = { n:1000, perm:[], prisoner:1 };
   const state = {
     prize: 0, first: null, opened: null, final: null, phase: 'pick',
     sound: localStorage.getItem('mh-sound') !== 'off',
@@ -694,6 +774,7 @@
     $('#birthdayView').classList.toggle('hidden',name!=='birthday');
     $('#boxesView').classList.toggle('hidden',name!=='boxes');
     $('#childrenView').classList.toggle('hidden',name!=='children');
+    $('#prisonersView').classList.toggle('hidden',name!=='prisoners');
     $('#homeBtn').classList.toggle('hidden',name==='home');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -926,6 +1007,102 @@
   $('#childCustomN').oninput=()=>$$('[data-childn]').forEach(x=>x.classList.remove('active'));
   $('#childRunBtn').onclick=runChildren;
 
+
+  function makePermutation100(){
+    const a=Array.from({length:100},(_,i)=>i+1);
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+    return a;
+  }
+  function newPrisonerLayout(){
+    prisonerState.perm=makePermutation100();
+    $('#prisonerPath').innerHTML='';
+    $('#prisonerResult').className='result-banner hidden';
+    $('#prisonerResult').textContent='';
+    $('#prisonerStatus').textContent='I cartellini sono stati mescolati nei 100 cassetti.';
+    tone(420,.07,'triangle',.04);
+  }
+  function followPrisoner(){
+    const target=+$('#prisonerRange').value;
+    prisonerState.prisoner=target;
+    let box=target,steps=[],success=false;
+    for(let i=0;i<50;i++){
+      const found=prisonerState.perm[box-1];
+      steps.push({box,found});
+      if(found===target){success=true;break;}
+      box=found;
+    }
+    $('#prisonerPath').innerHTML=steps.map((s,i)=>{
+      const last=i===steps.length-1;
+      return '<div class="path-step '+(last?(success?'success':'fail'):'')+'"><small>Apertura '+(i+1)+'</small><b>Cassetto '+s.box+'</b><small>trova '+s.found+'</small></div>';
+    }).join('');
+    const rb=$('#prisonerResult');
+    rb.className='result-banner '+(success?'win':'lose');
+    rb.textContent=success?'✓ Il prigioniero '+target+' trova il proprio numero in '+steps.length+' aperture.':'✗ Dopo 50 aperture il prigioniero '+target+' non ha ancora trovato il proprio numero.';
+    $('#prisonerStatus').textContent='Percorso seguito: '+steps.map(s=>s.box).join(' → ')+(success?' → trovato!':' → limite di 50');
+    tone(success?820:180,.13,'triangle',.07);
+  }
+  function maxCycleLength(perm){
+    const seen=new Uint8Array(100);let max=0;
+    for(let start=0;start<100;start++){
+      if(seen[start])continue;
+      let len=0,cur=start;
+      while(!seen[cur]){seen[cur]=1;len++;cur=perm[cur]-1;}
+      if(len>max)max=len;
+    }
+    return max;
+  }
+  function checkPrisonerTeam(){
+    const max=maxCycleLength(prisonerState.perm),success=max<=50;
+    const rb=$('#prisonerResult');
+    rb.className='result-banner '+(success?'win':'lose');
+    rb.textContent=success?'✓ TUTTA LA SQUADRA RIESCE! Il ciclo più lungo contiene '+max+' elementi.':'✗ LA SQUADRA PERDE. Esiste un ciclo lungo '+max+' elementi, quindi almeno un prigioniero supera il limite di 50.';
+    $('#prisonerStatus').textContent='Ciclo più lungo nella disposizione attuale: '+max+'.';
+    tone(success?900:150,.15,'triangle',.07);
+  }
+  function randomTeamSuccess(){
+    for(let i=0;i<100;i++)if(Math.random()>=.5)return false;
+    return true;
+  }
+  function cycleTeamSuccess(){
+    return maxCycleLength(makePermutation100())<=50;
+  }
+  function runPrisoners(){
+    let n=prisonerState.n,custom=parseInt($('#prisonerCustomN').value,10);
+    if(Number.isFinite(custom)&&custom>0)n=Math.min(custom,50000);
+    let randomWins=0,cycleWins=0;
+    for(let i=0;i<n;i++){
+      if(randomTeamSuccess())randomWins++;
+      if(cycleTeamSuccess())cycleWins++;
+    }
+    const pr=100*randomWins/n,pc=100*cycleWins/n;
+    $('#prisonerSimResults').classList.remove('hidden');
+    $('#prisonerHeadline').textContent=n.toLocaleString('it-IT')+' partite con 100 prigionieri';
+    $('#prisonerBars').innerHTML=bar('🎲 Casuale',pr,'randombar',0.000001)+bar('🔗 Cicli',pc,'cyclebar',31.182782);
+    $('#prisonerTheory').innerHTML='Teoria: casuale = (1/2)<sup>100</sup> ≈ 7,9 × 10<sup>−31</sup>; strategia dei cicli ≈ 31,18%.';
+    tone(700,.09,'triangle',.05);
+  }
+  function updatePrisonerValue(){
+    prisonerState.prisoner=+$('#prisonerRange').value;
+    $('#prisonerValue').textContent='n. '+prisonerState.prisoner;
+    $('#prisonerPath').innerHTML='';
+    $('#prisonerResult').className='result-banner hidden';
+  }
+  $('#prisonerRange').oninput=updatePrisonerValue;
+  $('#newPrisonerLayoutBtn').onclick=newPrisonerLayout;
+  $('#followCycleBtn').onclick=followPrisoner;
+  $('#checkTeamBtn').onclick=checkPrisonerTeam;
+  $$('[data-prisoner-mode]').forEach(t=>t.onclick=()=>{
+    $$('[data-prisoner-mode]').forEach(x=>x.classList.toggle('active',x===t));
+    const free=t.dataset.prisonerMode==='free';
+    $('#prisonerFree').classList.toggle('hidden',!free);$('#prisonerSim').classList.toggle('hidden',free);
+  });
+  $$('[data-prisonern]').forEach(x=>x.onclick=()=>{
+    prisonerState.n=+x.dataset.prisonern;$('#prisonerCustomN').value='';
+    $$('[data-prisonern]').forEach(y=>y.classList.toggle('active',y===x));
+  });
+  $('#prisonerCustomN').oninput=()=>$$('[data-prisonern]').forEach(x=>x.classList.remove('active'));
+  $('#prisonerRunBtn').onclick=runPrisoners;
+
   const darkStored=localStorage.getItem('mh-theme');
   if(darkStored==='dark' || (!darkStored && matchMedia('(prefers-color-scheme:dark)').matches)) document.body.classList.add('dark');
   function updateThemeIcon(){ $('#themeBtn').textContent=document.body.classList.contains('dark')?'🌙':'☀️'; }
@@ -938,14 +1115,14 @@
     try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }catch(e){}
   };
   $('#infoBtn').onclick=()=>{
-    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');
-    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):$('#infoChildren')).classList.remove('hidden');
+    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');
+    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):$('#infoPrisoners')).classList.remove('hidden');
     $('#infoModal').classList.remove('hidden');
   };
   $('#closeInfoBtn').onclick=()=>$('#infoModal').classList.add('hidden');
   $('#infoModal').onclick=e=>{if(e.target.id==='infoModal') $('#infoModal').classList.add('hidden');};
 
-  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();setView('home');
+  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();setView('home');
   if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 })();
 </script>
