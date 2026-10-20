@@ -914,16 +914,16 @@
   $('#guessBothBoysBtn').onclick=()=>finishChildGuess('both');
   $('#guessMixedBtn').onclick=()=>finishChildGuess('mixed');
   $('#childNextBtn').onclick=resetChildRound;
-  $('[data-child-mode]').forEach(t=>t.onclick=()=>{
-    $('[data-child-mode]').forEach(x=>x.classList.toggle('active',x===t));
+  $$('[data-child-mode]').forEach(t=>t.onclick=()=>{
+    $$('[data-child-mode]').forEach(x=>x.classList.toggle('active',x===t));
     const free=t.dataset.childMode==='free';
     $('#childFree').classList.toggle('hidden',!free);$('#childSim').classList.toggle('hidden',free);
   });
-  $('[data-childn]').forEach(x=>x.onclick=()=>{
+  $$('[data-childn]').forEach(x=>x.onclick=()=>{
     childState.n=+x.dataset.childn;$('#childCustomN').value='';
-    $('[data-childn]').forEach(y=>y.classList.toggle('active',y===x));
+    $$('[data-childn]').forEach(y=>y.classList.toggle('active',y===x));
   });
-  $('#childCustomN').oninput=()=>$('[data-childn]').forEach(x=>x.classList.remove('active'));
+  $('#childCustomN').oninput=()=>$$('[data-childn]').forEach(x=>x.classList.remove('active'));
   $('#childRunBtn').onclick=runChildren;
 
   const darkStored=localStorage.getItem('mh-theme');
