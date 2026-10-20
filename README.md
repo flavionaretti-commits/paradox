@@ -21,6 +21,13 @@ PWA didattica per esplorare paradossi e problemi controintuitivi attraverso espe
 - Domanda condizionata ai soli casi in cui la prima moneta osservata è d'oro.
 - Simulazione massiva e confronto con i valori teorici 2/3 e 1/3.
 
+### Paradosso dei due figli
+- Caso classico: famiglia con due figli, sapendo che almeno uno è maschio.
+- Esperimento manuale con rivelazione di primogenito e secondogenito.
+- Simulazione massiva delle famiglie compatibili con la condizione.
+- Confronto tra due maschi e famiglia mista con valori teorici 1/3 e 2/3.
+- Nota didattica sul fatto che il risultato dipende da come si ottiene l'informazione.
+
 ## Funzioni comuni
 - Home a moduli espandibile.
 - Modalità giorno/notte.
