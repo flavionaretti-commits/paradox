@@ -694,7 +694,7 @@
       btn.innerHTML='<div><div class="box-art"></div><div class="box-number">SCATOLA '+(i+1)+'</div></div><div class="coin-show" data-boxcoin="'+i+'"></div>';
       grid.appendChild(btn);
     }
-    $('.box-choice').forEach(btn=>btn.onclick=()=>chooseBox(+btn.dataset.box));
+    $$('.box-choice').forEach(btn=>btn.onclick=()=>chooseBox(+btn.dataset.box));
   }
   function newBoxRound(){
     boxState.boxes=shuffleBoxContents();boxState.chosen=null;boxState.shown=null;boxState.other=null;boxState.phase='choose';
@@ -709,7 +709,7 @@
     boxState.chosen=i;
     const pair=boxState.boxes[i],shownIndex=Math.random()<.5?0:1;
     boxState.shown=pair[shownIndex];boxState.other=pair[1-shownIndex];
-    $('.box-choice')[i].classList.add('selected');
+    $$('.box-choice')[i].classList.add('selected');
     $('[data-boxcoin="'+i+'"]').innerHTML=coinHtml(boxState.shown,boxState.shown==='G'?'ORO':'ARG.');
     tone(boxState.shown==='G'?720:420,.1,'triangle',.05);
     if(boxState.shown==='S'){
@@ -765,16 +765,16 @@
   $('#guessSilverBtn').onclick=()=>finishBoxGuess('S');
   $('#boxNextBtn').onclick=newBoxRound;
   $('#boxResetBtn').onclick=newBoxRound;
-  $('[data-box-mode]').forEach(t=>t.onclick=()=>{
-    $('[data-box-mode]').forEach(x=>x.classList.toggle('active',x===t));
+  $$('[data-box-mode]').forEach(t=>t.onclick=()=>{
+    $$('[data-box-mode]').forEach(x=>x.classList.toggle('active',x===t));
     const free=t.dataset.boxMode==='free';
     $('#boxFree').classList.toggle('hidden',!free);$('#boxSim').classList.toggle('hidden',free);
   });
-  $('[data-boxn]').forEach(x=>x.onclick=()=>{
+  $$('[data-boxn]').forEach(x=>x.onclick=()=>{
     boxState.n=+x.dataset.boxn;$('#boxCustomN').value='';
-    $('[data-boxn]').forEach(y=>y.classList.toggle('active',y===x));
+    $$('[data-boxn]').forEach(y=>y.classList.toggle('active',y===x));
   });
-  $('#boxCustomN').oninput=()=>$('[data-boxn]').forEach(x=>x.classList.remove('active'));
+  $('#boxCustomN').oninput=()=>$$('[data-boxn]').forEach(x=>x.classList.remove('active'));
   $('#boxRunBtn').onclick=runBoxes;
 
   const darkStored=localStorage.getItem('mh-theme');
