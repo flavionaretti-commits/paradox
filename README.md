@@ -41,6 +41,13 @@ PWA didattica per esplorare paradossi e problemi controintuitivi attraverso espe
 - Modalità interattiva per modificare i pesi dei gruppi.
 - Visualizzazione delle medie pesate e del momento in cui il paradosso compare o scompare.
 
+### Paradosso di San Pietroburgo
+- Partita manuale con lanci successivi di moneta fino alla prima testa.
+- Premio raddoppiato a ogni lancio: 2 €, 4 €, 8 €, 16 € e così via.
+- Simulazione di molte partite con media, mediana e premio massimo.
+- Distribuzione dei premi per mostrare il peso degli eventi rari.
+- Spiegazione del valore atteso divergente e del ruolo dell'utilità.
+
 ## Funzioni comuni
 - Home a moduli espandibile.
 - Modalità giorno/notte.
