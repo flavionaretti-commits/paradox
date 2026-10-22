@@ -48,6 +48,13 @@ PWA didattica per esplorare paradossi e problemi controintuitivi attraverso espe
 - Distribuzione dei premi per mostrare il peso degli eventi rari.
 - Spiegazione del valore atteso divergente e del ruolo dell'utilità.
 
+### Hotel di Hilbert
+- Hotel infinito con tutte le camere occupate.
+- Riallocazione per l'arrivo di 1 nuovo ospite.
+- Riallocazione per 10 nuovi ospiti.
+- Riallocazione per infiniti nuovi ospiti tramite camere pari e dispari.
+- Modalità esplorativa delle mappe n → 2n e n → 2n−1.
+
 ## Funzioni comuni
 - Home a moduli espandibile.
 - Modalità giorno/notte.
