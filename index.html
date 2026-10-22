@@ -262,6 +262,23 @@
     .stp-dist-fill{height:100%;background:var(--gold);border-radius:999px}
     @media(max-width:600px){.stp-summary{grid-template-columns:1fr}.stp-coin{width:105px;height:105px;font-size:2.5rem}}
 
+
+    .hilbert-hotel{max-width:900px;margin:1rem auto}
+    .hilbert-rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:.55rem;margin:1rem 0}
+    .hilbert-room{border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:.65rem;text-align:center;min-height:96px;display:grid;place-items:center}
+    .hilbert-room small{display:block;color:var(--muted);font-weight:800}
+    .hilbert-room b{display:block;font-size:1.05rem;margin:.15rem 0}
+    .hilbert-room.new{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--panel))}
+    .hilbert-room.moved{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,var(--panel))}
+    .hilbert-rule{max-width:760px;margin:.8rem auto;padding:.8rem 1rem;border-radius:16px;background:color-mix(in srgb,var(--gold) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));font-weight:900;text-align:center}
+    .hilbert-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
+    .hilbert-mapbox{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:1rem;text-align:center}
+    .hilbert-mapbox h3{margin:.1rem 0 .8rem}
+    .hilbert-formula{font-size:clamp(1.4rem,5vw,2.3rem);font-weight:1000;margin:.5rem 0}
+    .hilbert-arrow{font-size:2rem;margin:.25rem 0}
+    .hilbert-infinity{font-size:3.4rem;line-height:1}
+    @media(max-width:650px){.hilbert-map{grid-template-columns:1fr}}
+
     @media(max-width:720px){.home-grid{grid-template-columns:1fr}}
 
   </style>
@@ -324,6 +341,12 @@
           <h2>San Pietroburgo</h2>
           <p>Una moneta può promettere premi enormi. Ma quanto pagheresti davvero per giocare?</p>
           <span class="tag">VALORE ATTESO</span><span class="card-arrow">→</span>
+        </button>
+        <button class="paradox-card" data-open="hilbert">
+          <div class="paradox-icon">🏨♾️</div>
+          <h2>Hotel di Hilbert</h2>
+          <p>Un hotel infinito è completamente pieno. Eppure riesce ancora ad accogliere nuovi ospiti.</p>
+          <span class="tag">INFINITO</span><span class="card-arrow">→</span>
         </button>
       </div>
       <div class="future-strip">Nuovi paradossi potranno essere aggiunti qui come moduli indipendenti.</div>
@@ -748,6 +771,58 @@
       </section>
     </section>
 
+
+    <section id="hilbertView" class="hidden">
+      <section class="hero">
+        <h1>🏨 Hotel di Hilbert</h1>
+        <p>Infinite camere numerate 1, 2, 3, … e tutte occupate. Cosa succede se arrivano altri ospiti?</p>
+      </section>
+
+      <nav class="tabs" aria-label="Modalità Hotel di Hilbert">
+        <button class="tab active" data-hilbert-mode="hotel">🏨 HOTEL</button>
+        <button class="tab" data-hilbert-mode="map">🧭 MAPPA INFINITA</button>
+      </nav>
+
+      <section id="hilbertHotel" class="card">
+        <div class="family-question">L'hotel ha <b>infiniti ospiti</b> e ogni camera è occupata.</div>
+        <div class="actions">
+          <button id="hilbertOneBtn" class="primary">➕ ARRIVA 1 OSPITE</button>
+          <button id="hilbertTenBtn" class="secondary">➕ ARRIVANO 10 OSPITI</button>
+          <button id="hilbertInfiniteBtn" class="nbtn">♾️ ARRIVANO INFINITI OSPITI</button>
+        </div>
+        <div id="hilbertRule" class="hilbert-rule">Situazione iniziale: ospite n nella camera n.</div>
+        <div id="hilbertRooms" class="hilbert-rooms"></div>
+        <div class="compare-note">Sono mostrate solo le prime camere: l'hotel continua senza fine.</div>
+        <div class="actions"><button id="hilbertResetBtn" class="nbtn">↺ RIPRISTINA HOTEL PIENO</button></div>
+      </section>
+
+      <section id="hilbertMap" class="card hidden">
+        <div class="family-question">Scegli un numero n e osserva dove viene spostato l'ospite quando arrivano <b>infiniti nuovi ospiti</b>.</div>
+        <div class="control-row">
+          <label for="hilbertNRange">n</label>
+          <input id="hilbertNRange" type="range" min="1" max="50" value="7">
+          <span id="hilbertNValue" class="range-value">7</span>
+        </div>
+        <div class="hilbert-map">
+          <div class="hilbert-mapbox">
+            <h3>Ospite già presente n</h3>
+            <div class="hilbert-formula">n → 2n</div>
+            <div class="hilbert-arrow">↓</div>
+            <div id="hilbertOldExample" class="simpson-big">7 → 14</div>
+            <p class="tiny">Gli ospiti già presenti occupano le camere pari.</p>
+          </div>
+          <div class="hilbert-mapbox">
+            <h3>Nuovo ospite n</h3>
+            <div class="hilbert-formula">n → 2n − 1</div>
+            <div class="hilbert-arrow">↓</div>
+            <div id="hilbertNewExample" class="simpson-big">7 → 13</div>
+            <p class="tiny">I nuovi ospiti occupano le camere dispari.</p>
+          </div>
+        </div>
+        <div class="hilbert-rule">Pari e dispari insieme riempiono di nuovo tutte le camere: nessuno resta fuori.</div>
+      </section>
+    </section>
+
     <div class="footer">PARADOX! · esperimenti casuali: ripetendo le simulazioni i risultati possono variare leggermente.</div>
   </main>
 
@@ -807,6 +882,14 @@
         <p>Eppure quasi nessuno sarebbe disposto a pagare una cifra enorme per partecipare una sola volta. La maggior parte delle partite termina presto con premi piccoli; i premi giganteschi sono possibili, ma estremamente rari.</p>
         <p>Il paradosso ha avuto un ruolo importante nello sviluppo delle idee di <b>utilità</b> e di avversione al rischio: il valore monetario atteso, da solo, non descrive necessariamente quanto una lotteria sia desiderabile per una persona.</p>
       </div>
+      <div id="infoHilbert" class="hidden">
+        <h2>Hotel di Hilbert</h2>
+        <p>L'Hotel di Hilbert è un esperimento mentale che mostra quanto gli insiemi infiniti si comportino diversamente da quelli finiti. Immagina un hotel con camere numerate 1, 2, 3, … senza ultima camera.</p>
+        <p>Se tutte le camere sono occupate e arriva <b>un nuovo ospite</b>, basta spostare l'ospite della camera n nella camera n+1. La camera 1 si libera.</p>
+        <p>Se arrivano <b>10 nuovi ospiti</b>, ogni ospite già presente passa dalla camera n alla camera n+10. Si liberano così le camere da 1 a 10.</p>
+        <p>Se arrivano <b>infiniti nuovi ospiti</b>, ogni vecchio ospite passa da n a 2n, occupando soltanto le camere pari. Le camere dispari, infinite anch'esse, possono ospitare i nuovi arrivati: il nuovo ospite n va nella camera 2n−1.</p>
+        <p>Il punto non è che l'infinito sia “un numero enorme”: un insieme infinito può essere messo in corrispondenza biunivoca con una sua parte propria. Qui i numeri naturali hanno la stessa cardinalità dei soli numeri pari.</p>
+      </div>
       <div class="credits"><b>PARADOX!</b><br>Idea e progetto didattico: Flavio Naretti.<br>Web app realizzata con ChatGPT · 2026.</div>
       <div class="actions"><button id="closeInfoBtn" class="primary">CHIUDI</button></div>
     </div>
@@ -822,6 +905,7 @@
   const childState = { n:1000, rounds:0, both:0, phase:'guess', family:null };
   const prisonerState = { n:1000, perm:[], prisoner:1 };
   const stpState = { n:1000, tosses:0, done:false };
+  const hilbertState = { mode:'full' };
   const state = {
     prize: 0, first: null, opened: null, final: null, phase: 'pick',
     sound: localStorage.getItem('mh-sound') !== 'off',
@@ -973,6 +1057,7 @@
     $('#prisonersView').classList.toggle('hidden',name!=='prisoners');
     $('#simpsonView').classList.toggle('hidden',name!=='simpson');
     $('#stpetersburgView').classList.toggle('hidden',name!=='stpetersburg');
+    $('#hilbertView').classList.toggle('hidden',name!=='hilbert');
     $('#homeBtn').classList.toggle('hidden',name==='home');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -1426,6 +1511,54 @@
   $('#stpCustomN').oninput=()=>document.querySelectorAll('[data-stpn]').forEach(x=>x.classList.remove('active'));
   $('#stpRunBtn').onclick=runStp;
 
+
+  function renderHilbert(mode='full'){
+    hilbertState.mode=mode;
+    const rooms=$('#hilbertRooms');
+    const shown=16;
+    const cards=[];
+    if(mode==='full'){
+      for(let r=1;r<=shown;r++)cards.push('<div class="hilbert-room"><div><small>CAMERA '+r+'</small><b>🧑 Ospite '+r+'</b></div></div>');
+      $('#hilbertRule').textContent='Situazione iniziale: ospite n nella camera n. Tutte le camere sono occupate.';
+    }else if(mode==='one'){
+      for(let r=1;r<=shown;r++){
+        if(r===1)cards.push('<div class="hilbert-room new"><div><small>CAMERA 1</small><b>✨ Nuovo ospite</b></div></div>');
+        else cards.push('<div class="hilbert-room moved"><div><small>CAMERA '+r+'</small><b>🧑 Ospite '+(r-1)+'</b></div></div>');
+      }
+      $('#hilbertRule').textContent='Regola: ogni vecchio ospite passa da n a n+1. La camera 1 si libera.';
+    }else if(mode==='ten'){
+      for(let r=1;r<=shown;r++){
+        if(r<=10)cards.push('<div class="hilbert-room new"><div><small>CAMERA '+r+'</small><b>✨ Nuovo '+r+'</b></div></div>');
+        else cards.push('<div class="hilbert-room moved"><div><small>CAMERA '+r+'</small><b>🧑 Ospite '+(r-10)+'</b></div></div>');
+      }
+      $('#hilbertRule').textContent='Regola: ogni vecchio ospite passa da n a n+10. Le prime 10 camere accolgono i nuovi arrivati.';
+    }else{
+      for(let r=1;r<=shown;r++){
+        if(r%2===0)cards.push('<div class="hilbert-room moved"><div><small>CAMERA '+r+'</small><b>🧑 Vecchio '+(r/2)+'</b></div></div>');
+        else cards.push('<div class="hilbert-room new"><div><small>CAMERA '+r+'</small><b>✨ Nuovo '+((r+1)/2)+'</b></div></div>');
+      }
+      $('#hilbertRule').textContent='Regola: vecchio ospite n → 2n; nuovo ospite n → 2n−1. Pari e dispari restano entrambi infiniti.';
+    }
+    rooms.innerHTML=cards.join('');
+  }
+  function updateHilbertN(){
+    const n=+$('#hilbertNRange').value;
+    $('#hilbertNValue').textContent=n;
+    $('#hilbertOldExample').textContent=n+' → '+(2*n);
+    $('#hilbertNewExample').textContent=n+' → '+(2*n-1);
+  }
+  $('#hilbertOneBtn').onclick=()=>{renderHilbert('one');tone(620,.08,'triangle',.05);};
+  $('#hilbertTenBtn').onclick=()=>{renderHilbert('ten');tone(700,.08,'triangle',.05);};
+  $('#hilbertInfiniteBtn').onclick=()=>{renderHilbert('infinite');tone(820,.11,'triangle',.06);};
+  $('#hilbertResetBtn').onclick=()=>{renderHilbert('full');tone(420,.06,'triangle',.04);};
+  $('#hilbertNRange').oninput=updateHilbertN;
+  document.querySelectorAll('[data-hilbert-mode]').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('[data-hilbert-mode]').forEach(x=>x.classList.toggle('active',x===t));
+    const hotel=t.dataset.hilbertMode==='hotel';
+    $('#hilbertHotel').classList.toggle('hidden',!hotel);
+    $('#hilbertMap').classList.toggle('hidden',hotel);
+  });
+
   const darkStored=localStorage.getItem('mh-theme');
   if(darkStored==='dark' || (!darkStored && matchMedia('(prefers-color-scheme:dark)').matches)) document.body.classList.add('dark');
   function updateThemeIcon(){ $('#themeBtn').textContent=document.body.classList.contains('dark')?'🌙':'☀️'; }
@@ -1438,14 +1571,14 @@
     try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }catch(e){}
   };
   $('#infoBtn').onclick=()=>{
-    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');$('#infoSimpson').classList.add('hidden');$('#infoStpetersburg').classList.add('hidden');
-    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):currentView==='prisoners'?$('#infoPrisoners'):currentView==='simpson'?$('#infoSimpson'):$('#infoStpetersburg')).classList.remove('hidden');
+    $('#infoHome').classList.add('hidden');$('#infoMonty').classList.add('hidden');$('#infoBirthday').classList.add('hidden');$('#infoBoxes').classList.add('hidden');$('#infoChildren').classList.add('hidden');$('#infoPrisoners').classList.add('hidden');$('#infoSimpson').classList.add('hidden');$('#infoStpetersburg').classList.add('hidden');$('#infoHilbert').classList.add('hidden');
+    (currentView==='home'?$('#infoHome'):currentView==='monty'?$('#infoMonty'):currentView==='birthday'?$('#infoBirthday'):currentView==='boxes'?$('#infoBoxes'):currentView==='children'?$('#infoChildren'):currentView==='prisoners'?$('#infoPrisoners'):currentView==='simpson'?$('#infoSimpson'):currentView==='stpetersburg'?$('#infoStpetersburg'):$('#infoHilbert')).classList.remove('hidden');
     $('#infoModal').classList.remove('hidden');
   };
   $('#closeInfoBtn').onclick=()=>$('#infoModal').classList.add('hidden');
   $('#infoModal').onclick=e=>{if(e.target.id==='infoModal') $('#infoModal').classList.add('hidden');};
 
-  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();resetSimpson();updateSimpsonWeights();resetStpGame();setView('home');
+  updateThemeIcon();updateSoundIcon();updateStats();newGame();updatePeople();updateSimPeople();newBoxRound();updateBoxStats();resetChildRound();updateChildStats();newPrisonerLayout();updatePrisonerValue();resetSimpson();updateSimpsonWeights();resetStpGame();renderHilbert('full');updateHilbertN();setView('home');
   if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
 })();
 </script>
